@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ФОК «Атлант» — Главная</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background-color: #0a192f;
+            color: white;
+            line-height: 1.5;
+        }
+
+        ::selection {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .bg-glow-1 {
+            position: fixed;
+            top: -5rem;
+            left: -5rem;
+            width: 24rem;
+            height: 24rem;
+            background-color: #3b82f6;
+            border-radius: 9999px;
+            filter: blur(80px);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-glow-2 {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            width: 20rem;
+            height: 20rem;
+            background-color: #6366f1;
+            border-radius: 9999px;
+            filter: blur(80px);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* контейнер */
+        .container {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        /* шапка как в App.vue */
+        .header {
+            background-color: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-weight: 300;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+        .nav-links a:hover {
+            color: #60a5fa;
+        }
+        .profile-btn {
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+        .profile-btn:hover {
+            opacity: 1;
+        }
+        .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+
+        /* отступы как в исходнике space-y-20 pb-20 */
+        .space-y-20 > * + * {
+            margin-top: 5rem;
+        }
+        .pb-20 {
+            padding-bottom: 5rem;
+        }
+        .py-8 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 1.5rem;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            height: 500px;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            z-index: 5;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .dot.active {
+            background-color: #3b82f6;
+            width: 24px;
+            border-radius: 12px;
+        }
+
+        /* сетки */
+        .grid {
+            display: grid;
+        }
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .grid-cols-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .gap-16 { gap: 4rem; }
+        .gap-8 { gap: 2rem; }
+        .gap-6 { gap: 1.5rem; }
+
+        /* карточки статистики */
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* карточки новостей */
+        .news-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+            text-align: left;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .news-card:hover {
+            border-color: #3b82f6;
+        }
+        .news-image {
+            width: 100%;
+            height: 192px;
+            object-fit: cover;
+            background-color: #1e293b;
+        }
+        .news-content {
+            padding: 1.5rem;
+            flex: 1;
+        }
+        .news-title {
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .news-excerpt {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* кнопки */
+        .btn-blue {
+            background-color: #2563eb;
+            border-radius: 9999rem;
+            font-weight: bold;
+            display: inline-block;
+            transition: background 0.2s;
+            text-decoration: none;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-blue:hover {
+            background-color: #1d4ed8;
+        }
+        .px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .px-12 { padding-left: 3rem; padding-right: 3rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+
+        .dev-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1e293b;
+            color: #60a5fa;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 1001;
+            animation: fadeOut 2s ease-in-out forwards;
+            pointer-events: none;
+            white-space: nowrap;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            font-family: system-ui, 'Segoe UI', sans-serif;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            70% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(20px); visibility: hidden; }
+        }
+
+        .rounded-3xl { border-radius: 1.5rem; }
+        .rounded-2xl { border-radius: 1rem; }
+        .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .object-cover { object-fit: cover; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+        .h-\[500px\] { height: 500px; }
+        .h-\[600px\] { height: 600px; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: 700; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-gray-300 { color: #d1d5db; }
+        .text-gray-400 { color: #9ca3af; }
+        .leading-relaxed { line-height: 1.625; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+        .italic { font-style: italic; }
+        .items-center { align-items: center; }
+
+        @media (max-width: 1024px) {
+            .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-cols-2 { grid-template-columns: 1fr; gap: 2rem; }
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .grid-cols-4 { grid-template-columns: 1fr 1fr; }
+            .stat-number { font-size: 2rem; }
+            .text-4xl { font-size: 1.8rem; }
+            .carousel-slide { height: 300px; }
+            .h-\[500px\] { height: 300px; }
+            .h-\[600px\] { height: 320px; }
+            .nav-links { gap: 1rem; }
+            .nav-links a:not(.profile-btn) { font-size: 0.7rem; }
+        }
+        @media (max-width: 640px) {
+            .container { padding-left: 1rem; padding-right: 1rem; }
+            .grid-cols-4 { grid-template-columns: 1fr; }
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav { flex-direction: column; gap: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-glow-1"></div>
+<div class="bg-glow-2"></div>
+
+<div style="position: relative; z-index: 10;">
+    <header class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo">ФОК «АТЛАНТ»</div>
+                <div class="nav-links">
+                    <a href="#" class="active" onclick="event.preventDefault();">ГЛАВНАЯ</a>
+                    <a href="#" onclick="event.preventDefault(); showDevMessage('О нас');">О НАС</a>
+                    <a href="#" onclick="event.preventDefault(); showDevMessage('Услуги');">УСЛУГИ</a>
+                    <a href="#" onclick="event.preventDefault(); showDevMessage('Расписание');">РАСПИСАНИЕ</a>
+                    <a href="#" onclick="event.preventDefault(); showDevMessage('Контакты');">КОНТАКТЫ</a>
+
+                    <button id="profileIconBtn" class="profile-btn" onclick="event.preventDefault(); showDevMessage('Профиль');">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <div class="space-y-20 pb-20">
+            <section>
+                <div class="carousel" id="mainCarousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        <div class="carousel-slide">
+                            <img src="/images/баннер3.jpg" alt="Баннер 1">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="/images/баннер1.jpg" alt="Баннер 2">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="/images/баннер2.jpg" alt="Баннер 3">
+                        </div>
+                    </div>
+                    <div class="carousel-dots" id="carouselDots"></div>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">О нас</h2>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        ФОК «Атлант» — современный спортивный центр, предлагающий уникальные возможности для развития вашего тела и духа. Наши залы оснащены по последнему слову техники, а профессиональные инструкторы помогут вам достичь поставленных целей в комфортной атмосфере.
+                    </p>
+                    <a href="#" onclick="event.preventDefault(); showDevMessage('О нас');" class="btn-blue px-8 py-3 inline-block">Подробнее</a>
+                </div>
+                <img src="/images/Здание.png" class="rounded-3xl shadow-2xl h-full object-cover w-full" alt="ФОК Атлант">
+            </section>
+
+            <section class="grid grid-cols-4 gap-8">
+                <div class="stat-card">
+                    <div class="stat-number">2000+</div>
+                    <p class="stat-label">посетителей</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">16</div>
+                    <p class="stat-label">площадок и залов</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">11000+</div>
+                    <p class="stat-label">м² площадь</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <p class="stat-label">секций</p>
+                </div>
+            </section>
+
+            <section>
+                <img src="/images/photo_2026-05-02_20-53-17.jpg" class="w-full h-[700px] object-cover rounded-3xl shadow-2xl" alt="Спортивный зал">
+            </section>
+
+            <!-- новости -->
+            <section>
+                <h2 class="text-3xl font-bold mb-8">Новости</h2>
+                <div class="news-grid" id="newsContainer"></div>
+                <div id="noNewsMessage" class="text-gray-500 italic" style="display: none;">Новостей пока нет...</div>
+            </section>
+
+            <!-- вопросы -->
+            <section class="text-center py-10">
+                <h2 class="text-3xl font-bold mb-6">Остались вопросы?</h2>
+                <a href="#" onclick="event.preventDefault(); showDevMessage('Контакты');" class="btn-blue px-12 py-4 inline-block">Напишите нам</a>
+            </section>
+        </div>
+    </main>
+</div>
+
+<script>
+    // уведомление о разработке для всех страниц, включая профиль
+    function showDevMessage(pageName) {
+        const toast = document.createElement('div');
+        toast.className = 'dev-toast';
+        toast.textContent = `📄 Страница «${pageName}» в разработке`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            if (toast && toast.remove) toast.remove();
+        }, 2500);
+    }
+
+    // ----- 1. карусель (автопрокрутка 3 сек) -----
+    let carouselInterval;
+    let currentIndex = 0;
+    const carouselInner = document.getElementById('carouselInner');
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dotsContainer = document.getElementById('carouselDots');
+    const totalSlides = slides.length;
+
+    function createDots() {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === currentIndex) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function updateDots() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, idx) => {
+            if (idx === currentIndex) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+    }
+
+    function goToSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= totalSlides) index = 0;
+        currentIndex = index;
+        if (carouselInner) carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+        updateDots();
+        resetAutoPlay();
+    }
+
+    function nextSlide() {
+        goToSlide(currentIndex + 1);
+    }
+
+    function startAutoPlay() {
+        if (carouselInterval) clearInterval(carouselInterval);
+        carouselInterval = setInterval(nextSlide, 3000);
+    }
+
+    function resetAutoPlay() {
+        if (carouselInterval) clearInterval(carouselInterval);
+        startAutoPlay();
+    }
+
+    if (carouselInner && slides.length) {
+        createDots();
+        goToSlide(0);
+        startAutoPlay();
+        const carouselEl = document.getElementById('mainCarousel');
+        if (carouselEl) {
+            carouselEl.addEventListener('mouseenter', () => {
+                if (carouselInterval) clearInterval(carouselInterval);
+            });
+            carouselEl.addEventListener('mouseleave', startAutoPlay);
+        }
+    }
+
+    // ----- 2. новости (три карточки) -----
+    const newsData = [
+        {
+            id: 1,
+            title: "Открытие нового тренажерного зала",
+            content: "Мы рады сообщить, что в ФОК «Атлант» открылся современный тренажерный зал с новейшим оборудованием. Приходите на бесплатную экскурсию!",
+            image: "/images/Новость1.png"
+        },
+        {
+            id: 2,
+            title: "Соревнования по плаванию",
+            content: "Приглашаем всех желающих принять участие в ежегодных соревнованиях по плаванию. Призы и грамоты гарантированы.",
+            image: "/images/Новость2.png"
+        },
+        {
+            id: 3,
+            title: "Летний интенсив для детей",
+            content: "Записывайте детей на летние спортивные смены. Йога, ОФП, командные игры – полезные каникулы в «Атланте».",
+            image: "/images/Новость3.png"
+        }
+    ];
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function renderNews() {
+        const container = document.getElementById('newsContainer');
+        const noMsg = document.getElementById('noNewsMessage');
+        if (!container) return;
+        if (newsData.length === 0) {
+            if (noMsg) noMsg.style.display = 'block';
+            container.innerHTML = '';
+            return;
+        }
+        if (noMsg) noMsg.style.display = 'none';
+        container.innerHTML = '';
+        newsData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'news-card';
+            card.innerHTML = `
+                <img src="${item.image}" class="news-image" alt="${escapeHtml(item.title)}">
+                <div class="news-content">
+                    <h3 class="news-title">${escapeHtml(item.title)}</h3>
+                    <p class="news-excerpt">${escapeHtml(item.content)}</p>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+    renderNews();
+</script>
+</body>
+</html>
